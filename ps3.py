@@ -197,7 +197,8 @@ def is_valid_word(word, hand, word_list):
     returns: boolean
     """
     
-    word_freq_dict = get_frequency_dict(word.lower())
+    word = word.lower()
+    word_freq_dict = get_frequency_dict(word)
     
     # for each char in the word, check if the count of occurrences of that char in the word
     # exceeds the count of occurrences of that char in the hand (in cases where the char
@@ -208,7 +209,7 @@ def is_valid_word(word, hand, word_list):
         count > hand.get(char, 0) for char, count in word_freq_dict.items()
     ])
 
-    return word.lower() in word_list and word_reconciles_with_hand
+    return word in word_list and word_reconciles_with_hand
 
 
 
