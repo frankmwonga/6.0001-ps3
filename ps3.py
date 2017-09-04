@@ -18,7 +18,7 @@ HAND_SIZE = 7
 SCRABBLE_LETTER_VALUES = {
     'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 
     'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 
-    'w': 4, 'x': 8, 'y': 4, 'z': 10
+    'w': 4, 'x': 8, 'y': 4, 'z': 10, '*': 0
 }
 
 # -----------------------------------
@@ -140,7 +140,9 @@ def deal_hand(n):
     """
     
     hand={}
-    num_vowels = int(math.ceil(n / 3))
+    num_vowels = int(math.ceil(n / 3)) - 1
+    
+    hand['*'] = 1
 
     for i in range(num_vowels):
         x = random.choice(VOWELS)
@@ -198,14 +200,14 @@ def is_valid_word(word, hand, word_list):
     word_freq_dict = get_frequency_dict(word.lower())
     
     # for each char in the word, check if the count of occurrences of that char in the word
-    # exceeds the count of occurrences of that char in the hand (in cases where the char
-    # does not occur in the hand, this count would be zero). If for any character in the word
-    # this comparison is true, the word is not valid (because either char does not exist in the
-    # hand, or the word contains more occurrences of the char than the hand)
-    word_only_contains_letters_in_hand = [
-        count > hand.get(char, 0) for char, count in word_freq_dict.items()
-    ].count(True) == 0
-            
+    # is less than or equal to the count of occurrences of that char in the hand (in cases where 
+    # the char does not occur in the hand, this count would be zero). If for any character in the 
+    # word this comparison is false, the word is not valid (because either char does not exist in 
+    # the hand, or the word contains more occurrences of the char than the hand)
+    word_only_contains_letters_in_hand = all([
+        count <= hand.get(char, 0) for char, count in word_freq_dict.items()
+    ])
+
     return word.lower() in word_list and word_only_contains_letters_in_hand
 
 
