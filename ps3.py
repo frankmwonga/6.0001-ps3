@@ -173,8 +173,10 @@ def update_hand(hand, word):
     hand: dictionary (string -> int)    
     returns: dictionary (string -> int)
     """
+    
+    return {char: max(0, hand[char] - word.lower().count(char)) for char in hand}
+    
 
-    pass  # TO DO... Remove this line when you implement this function
 
 #
 # Problem #3: Test word validity
