@@ -209,7 +209,15 @@ def is_valid_word(word, hand, word_list):
         count > hand.get(char, 0) for char, count in word_freq_dict.items()
     ])
 
-    return word in word_list and word_reconciles_with_hand
+    # the wildcard stands for a vowel, so generate all possible words by replacing the wildcard with
+    # each vowel. If the word does not contain a wildcard, then possible_words will contain one element
+    # (the word passed to is_valid_word). Then check if any possible_words are in the word_list. Again,
+    # in the case where the world has no wildcard, this will just check to see if the word passed to
+    # is_valid_word is in the word_list
+    possible_words = [word.replace('*', vowel) for vowel in VOWELS]
+    word_in_list = any([possible_word in word_list for possible_word in possible_words])
+    
+    return word_in_list and word_reconciles_with_hand
 
 
 
