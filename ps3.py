@@ -140,7 +140,9 @@ def deal_hand(n):
     """
     
     hand={}
-    num_vowels = int(math.ceil(n / 3))
+    num_vowels = int(math.ceil(n / 3)) - 1
+    
+    hand['*'] = 1
 
     for i in range(num_vowels):
         x = random.choice(VOWELS)
