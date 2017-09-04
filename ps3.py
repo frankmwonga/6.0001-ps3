@@ -174,6 +174,8 @@ def update_hand(hand, word):
     returns: dictionary (string -> int)
     """
     
+    # if for a given char the word has more occurrences of that char than the hand, we use max
+    # to avoid returning a hand that contains negative char counts
     return {char: max(0, hand[char] - word.lower().count(char)) for char in hand}
     
 
@@ -192,8 +194,21 @@ def is_valid_word(word, hand, word_list):
     word_list: list of lowercase strings
     returns: boolean
     """
+    
+    word_freq_dict = get_frequency_dict(word.lower())
+    
+    # for each char in the word, check if the count of occurrences of that char in the word
+    # exceeds the count of occurrences of that char in the hand (in cases where the char
+    # does not occur in the hand, this count would be zero). If for any character in the word
+    # this comparison is true, the word is not valid (because either char does not exist in the
+    # hand, or the word contains more occurrences of the char than the hand)
+    word_only_contains_letters_in_hand = [
+        count > hand.get(char, 0) for char, count in word_freq_dict.items()
+    ].count(True) == 0
+            
+    return word.lower() in word_list and word_only_contains_letters_in_hand
 
-    pass  # TO DO... Remove this line when you implement this function
+
 
 #
 # Problem #5: Playing a hand
