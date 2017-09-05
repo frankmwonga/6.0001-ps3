@@ -321,7 +321,21 @@ def substitute_hand(hand, letter):
     returns: dictionary (string -> int)
     """
     
-    pass  # TO DO... Remove this line when you implement this function
+    if letter not in hand.keys():
+        return hand
+    else:
+        all_letters = list(CONSONANTS + VOWELS)
+        candidate_letters = [
+            candidate_letter for candidate_letter in all_letters 
+            if candidate_letter not in hand.keys() and candidate_letter != letter
+        ]
+        substitute_letter = random.choice(candidate_letters)
+        substitute_hand = {
+            (substitute_letter if old_letter == letter else old_letter): count
+            for old_letter, count in hand.items()        
+        }
+        return substitute_hand
+        
        
     
 def play_game(word_list):
