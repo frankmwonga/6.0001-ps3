@@ -94,7 +94,7 @@ def get_word_score(word, n):
     returns: int >= 0
     """
     
-    letter_points = sum([SCRABBLE_LETTER_VALUES[letter.lower()] for letter in word])
+    letter_points = sum([SCRABBLE_LETTER_VALUES[letter] for letter in word.lower()])
     word_length_points = max(1, 7 * len(word) - 3 * (n - len(word)))
     return letter_points * word_length_points
 
@@ -176,8 +176,7 @@ def update_hand(hand, word):
     returns: dictionary (string -> int)
     """
     
-    # if for a given char the word has more occurrences of that char than the hand, we use max
-    # to avoid returning a hand that contains negative char counts
+    # use max to avoid negative char counts
     return {char: max(0, hand[char] - word.lower().count(char)) for char in hand}
     
 
@@ -200,20 +199,12 @@ def is_valid_word(word, hand, word_list):
     word = word.lower()
     word_freq_dict = get_frequency_dict(word)
     
-    # for each char in the word, check if the count of occurrences of that char in the word
-    # exceeds the count of occurrences of that char in the hand (in cases where the char
-    # does not occur in the hand, this count would be zero). If for any character in the word
-    # this comparison is true, the word is not valid (because either char does not exist in the
-    # hand, or the word contains more occurrences of the char than the hand)
+    # a word doesn't reconcile with a hand if any of the chars in the word occur more
+    # times in the word than they do in the hand
     word_reconciles_with_hand = not any([
         count > hand.get(char, 0) for char, count in word_freq_dict.items()
     ])
 
-    # the wildcard stands for a vowel, so generate all possible words by replacing the wildcard with
-    # each vowel. If the word does not contain a wildcard, then possible_words will contain one element
-    # (the word passed to is_valid_word). Then check if any possible_words are in the word_list. Again,
-    # in the case where the world has no wildcard, this will just check to see if the word passed to
-    # is_valid_word is in the word_list
     possible_words = [word.replace('*', vowel) for vowel in VOWELS]
     word_in_list = any([possible_word in word_list for possible_word in possible_words])
     
