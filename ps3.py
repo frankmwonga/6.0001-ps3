@@ -80,7 +80,7 @@ def get_word_score(word, n):
     returns: int >= 0
     """
     
-    letter_points = sum([SCRABBLE_LETTER_VALUES[letter] for letter in word.lower()])
+    letter_points = sum([SCRABBLE_LETTER_VALUES.get(letter, 0) for letter in word.lower()])
     word_length_points = max(1, 7 * len(word) - 3 * (n - len(word)))
     return letter_points * word_length_points
 
@@ -233,7 +233,6 @@ def play_hand(hand, word_list):
     """
     
     total_score = 0
-    
     while calculate_handlen(hand) > 0:
         print('Current Hand: ', end='')
         display_hand(hand)
